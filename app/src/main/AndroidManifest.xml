@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="DATABASE"
-            android:value="sugar_snake1.db" />
+            android:value="sugar_snake2.db" />
         <meta-data
             android:name="VERSION"
             android:value="8" />

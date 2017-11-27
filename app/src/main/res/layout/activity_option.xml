@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.apple.snake.OptionActivity"
-    android:background="#008002">
+    android:background="#197A39">
 
     <LinearLayout
         android:layout_width="match_parent"
