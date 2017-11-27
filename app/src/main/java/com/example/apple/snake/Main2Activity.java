@@ -7,12 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.apple.snake.firebase.GlobalResultActivity;
+import com.example.apple.snake.levelActivity.CategoryActivity;
+
 import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
 
     public Button btn;
     public Button btnResult;
+    public Button btnGlobalResult;
     public Button btnAbout;
     public Button btnOption;
 
@@ -22,7 +26,7 @@ public class Main2Activity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
                                    @Override
                                    public void onClick(View view) {
-                                       Intent start = new Intent(Main2Activity.this, MainActivity.class);
+                                       Intent start = new Intent(Main2Activity.this, CategoryActivity.class);
                                        startActivity(start);
                                    }
                                }
@@ -37,6 +41,17 @@ public class Main2Activity extends AppCompatActivity {
                                        startActivity(start);
                                    }
                                }
+        );
+
+        btnGlobalResult = (Button) findViewById(R.id.buttonGlobalResult);
+
+        btnGlobalResult.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View view) {
+                                             Intent start = new Intent(Main2Activity.this, GlobalResultActivity.class);
+                                             startActivity(start);
+                                         }
+                                     }
         );
 
         btnAbout = (Button) findViewById(R.id.aboutButton);
@@ -68,7 +83,7 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         List<SeekBarValue> values = SeekBarValue.listAll(SeekBarValue.class);
         if(values.size() == 0) {
-            SeekBarValue seekBarValue = new SeekBarValue(1, 1);
+            SeekBarValue seekBarValue = new SeekBarValue(1, 1, 1);
             seekBarValue.save();
             Log.d("seekBarValue",String.valueOf(seekBarValue.value));
         }

@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="DATABASE"
-            android:value="sugar_snake2.db" />
+            android:value="sugar_snake4.db" />
         <meta-data
             android:name="VERSION"
             android:value="8" />
@@ -42,8 +42,13 @@
         <activity
             android:name=".AboutActivity"
             android:label="About" />
-        <activity android:name=".OptionActivity"
-            android:label="Options"></activity>
+        <activity
+            android:name=".OptionActivity"
+            android:label="Options" />
+        <activity
+            android:name=".firebase.GlobalResultActivity"
+            android:label="Global results" />
+        <activity android:name=".levelActivity.CategoryActivity"></activity>
     </application>
 
 </manifest>

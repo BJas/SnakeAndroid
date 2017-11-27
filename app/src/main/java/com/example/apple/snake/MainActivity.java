@@ -21,9 +21,13 @@ import android.media.MediaPlayer;
 import com.example.apple.snake.engine.GameEngine;
 import com.example.apple.snake.enums.Direction;
 import com.example.apple.snake.enums.GameState;
+import com.example.apple.snake.levelActivity.CategoryActivity;
 import com.example.apple.snake.views.SnakeView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
@@ -43,15 +47,31 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private boolean pause = false;
     ImageButton btn;
     ImageButton btn1;
+    private DatabaseReference mDatabase;
     private long id = 1;
+    String key;
+    private int level;
+    private int levelId;
+    SeekBarValue seekBarValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        key = database.getReference("users").push().getKey();
+
+
+
+        Bundle data = getIntent().getExtras();
+        level = data.getInt("position");
+
         gameEngine = new GameEngine();
         gameEngine.initGame();
+        gameEngine.AddWalls(level);
+
 
         backgroundMusic = MediaPlayer.create(MainActivity.this, R.raw.back);
         backgroundMusic.setLooping(true);
@@ -59,8 +79,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         List<SeekBarValue> seekBarValueList = SeekBarValue.listAll(SeekBarValue.class);
         if(seekBarValueList.size() == 1) {
-            SeekBarValue seekBarValue = SeekBarValue.findById(SeekBarValue.class, id);
+            seekBarValue = SeekBarValue.findById(SeekBarValue.class, id);
             updateDelay = 700 - seekBarValue.value*50;
+            levelId = seekBarValue.getLevel();
 
             switch (seekBarValue.backgroundId){
                 case 1:
@@ -142,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 if(pause) {
-                    Intent start = new Intent(MainActivity.this, Main2Activity.class);
+                    Intent start = new Intent(MainActivity.this, CategoryActivity.class);
                     startActivity(start);
                 }
             }
@@ -177,6 +198,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     add = false;
                     EditText title = (EditText) view.findViewById(R.id.cr_title);
                     Score scoreClass = new Score(gameEngine.score, title.getText().toString());
+                    if(gameEngine.score == 20 && seekBarValue.level == level + 1) {
+                        seekBarValue.level += 1;
+                        seekBarValue.save();
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Opened level " + String.valueOf(seekBarValue.level), Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                    mDatabase.child("users").child(key).child("name").setValue(title.getText().toString());
+                    mDatabase.child("users").child(key).child("score").setValue(String.valueOf(gameEngine.score));
                     Log.d("title", scoreClass.getName());
                     scoreClass.save();
                     gameEngine.score = 0;

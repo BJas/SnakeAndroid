@@ -9,14 +9,16 @@ import com.orm.SugarRecord;
 public class SeekBarValue extends SugarRecord<SeekBarValue> {
     Integer value;
     Integer backgroundId;
+    Integer level;
 
     public SeekBarValue(){
     }
 
-    public SeekBarValue(Integer value, Integer backgroundId){
+    public SeekBarValue(Integer value, Integer backgroundId, Integer level){
 
         this.value = value;
         this.backgroundId = backgroundId;
+        this.level = level;
     }
 
     public Integer getValue() {
@@ -33,5 +35,13 @@ public class SeekBarValue extends SugarRecord<SeekBarValue> {
 
     public void setBackgroundId(Integer backgroundId) {
         this.backgroundId = backgroundId;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

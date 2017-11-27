@@ -1,24 +1,14 @@
 package com.example.apple.snake.engine;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.CornerPathEffect;
-import android.graphics.Path;
-import android.os.CountDownTimer;
-import android.support.annotation.RestrictTo;
-import android.util.Log;
-import android.widget.TextView;
 
-import com.example.apple.snake.MainActivity;
-import com.example.apple.snake.R;
-import com.example.apple.snake.Score;
 import com.example.apple.snake.classes.Coordinate;
 import com.example.apple.snake.enums.Direction;
 import com.example.apple.snake.enums.GameState;
 import com.example.apple.snake.enums.TileType;
+import com.example.apple.snake.levelActivity.CategoryActivity;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Random;
 
@@ -46,9 +36,11 @@ public class GameEngine {
 
     private GameState currentGameState = GameState.Running;
 
+    private CategoryActivity categoryActivity;
+
     public int score = 0;
 
-
+    private int level;
     private Coordinate getSnakeHead() {
         return snake.get(0);
     }
@@ -56,7 +48,6 @@ public class GameEngine {
     public void initGame() {
 
         AddSnake();
-        AddWalls();
         AddApples();
 
     }
@@ -189,8 +180,26 @@ public class GameEngine {
             increaseTail = false;
         }
 
-        snake.get(0).setX(snake.get(0).getX() + x);
-        snake.get(0).setY(snake.get(0).getY() + y);
+        if(snake.get(0).getY() == 0 && currentDirection.equals(Direction.North)) {
+            snake.get(0).setX(snake.get(0).getX() + x);
+            snake.get(0).setY(GameHeight + y);
+        }
+        else if(snake.get(0).getY() == GameHeight-1 && currentDirection.equals(Direction.South)) {
+            snake.get(0).setX(snake.get(0).getX() + x);
+            snake.get(0).setY(0);
+        }
+        else if(snake.get(0).getX() == 0 && currentDirection.equals(Direction.West)) {
+            snake.get(0).setX(GameWidth + x);
+            snake.get(0).setY(snake.get(0).getY() + y);
+        }
+        else if(snake.get(0).getX() == GameWidth-1 && currentDirection.equals(Direction.East)) {
+            snake.get(0).setX(0);
+            snake.get(0).setY(snake.get(0).getY() + y);
+        }
+        else {
+            snake.get(0).setX(snake.get(0).getX() + x);
+            snake.get(0).setY(snake.get(0).getY() + y);
+        }
     }
 
     private void AddSnake() {
@@ -204,16 +213,154 @@ public class GameEngine {
         snake.add(new Coordinate(2, 7));
     }
 
-    private void AddWalls() {
+    public void AddWalls(int levelId) {
 
-        for (int x = 0; x < GameWidth; x++) { //Top and bottom walls
-            walls.add(new Coordinate(x, 0));
-            walls.add(new Coordinate(x, GameWidth-1));
+        switch (levelId){          //Top and bottom walls
+            case 0:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level1(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY1(y);
+                }
+                break;
+            case 1:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level1(x);
+                    Level2(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY1(y);
+                }
+                break;
+            case 2:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level1(x);
+                    Level3(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY1(y);
+                }
+                break;
+            case 3:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level2(x);
+                    Level4(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY2(y);
+                }
+                break;
+            case 4:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level3(x);
+                    Level5(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY2(y);
+                }
+                break;
+            case 5:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level6(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY2(y);
+                    LevelByY3(y);
+                }
+                break;
+            }
         }
 
-        for (int y = 1; y < GameHeight; y++) { //Left and right walls
+
+    //Level 1 2 3
+    private void LevelByY1(Integer y) {
+        if(y < Math.round(GameHeight / 2)) {
+            walls.add(new Coordinate(0, y));
+        }
+        if(y >= Math.round(GameHeight / 2)) {
+            walls.add(new Coordinate(GameWidth-1, y));
+        }
+    }
+
+    //Level 4 5
+    private void LevelByY2(Integer y) {
+        if(y < GameHeight) {
             walls.add(new Coordinate(0, y));
             walls.add(new Coordinate(GameWidth-1, y));
+        }
+    }
+
+    //Level 6
+    private void LevelByY3(Integer y) {
+        if(y < Math.round(GameHeight / 4)) {
+            walls.add(new Coordinate(Math.round(GameWidth / 3), y));
+            walls.add(new Coordinate(2 * Math.round(GameWidth / 3), y));
+        }
+        if(y >= 3 * Math.round(GameHeight / 4)) {
+            walls.add(new Coordinate(Math.round(GameWidth / 3), y));
+            walls.add(new Coordinate(2 * Math.round(GameWidth / 3), y));
+        }
+    }
+
+    //Level #1
+    private void Level1(Integer x) {
+
+        if(x < Math.round(GameWidth / 2)) {
+            walls.add(new Coordinate(x, 0));
+        }
+        if(x >= Math.round(GameWidth / 2)) {
+            walls.add(new Coordinate(x, GameWidth - 1));
+        }
+    }
+
+    //Level #2
+    private void Level2(Integer x) {
+
+        if (x > 8 && x < GameWidth-9) {
+            walls.add(new Coordinate(x, Math.round(GameWidth / 2) - 1));
+        }
+    }
+
+    //Level #3
+    private void Level3(Integer x) {
+
+        if (x > 8 && x < GameWidth-9) {
+            walls.add(new Coordinate(x, Math.round(GameWidth / 3) - 3));
+            walls.add(new Coordinate(x, 2 * Math.round(GameWidth / 3) + 2));
+        }
+    }
+
+    private void Level4(Integer x) {
+
+
+        if (x < GameWidth-Math.round(GameWidth / 2)) {
+            walls.add(new Coordinate(x, Math.round(GameWidth / 3) - 3));
+        }
+        if (Math.round(GameWidth / 2) <= x) {
+            walls.add(new Coordinate(x, 2 * Math.round(GameWidth / 3) + 2));
+        }
+    }
+
+    private void Level5(Integer x) {
+        if(x < Math.round(GameWidth / 3)) {
+            walls.add(new Coordinate(x, 0));
+            walls.add(new Coordinate(x, Math.round(GameWidth / 2)));
+            walls.add(new Coordinate(x, GameWidth - 1));
+        }
+        if(x >= 2* Math.round(GameWidth / 3)) {
+            walls.add(new Coordinate(x, 0));
+            walls.add(new Coordinate(x, Math.round(GameWidth / 2)));
+            walls.add(new Coordinate(x, GameWidth - 1));
+        }
+    }
+
+    private  void Level6(Integer x) {
+        if(x < Math.round(GameWidth / 3) - 1) {
+            walls.add(new Coordinate(x, Math.round(GameWidth / 2)));
+        }
+        if(x >= 2 * Math.round(GameWidth / 3) + 1) {
+            walls.add(new Coordinate(x, Math.round(GameWidth / 2)));
         }
     }
 
@@ -221,41 +368,22 @@ public class GameEngine {
         Coordinate coordinate = null;
 
         boolean added = false;
-
-        while (!added) {
-            int x = 1 + random.nextInt(GameWidth - 2);
-            int y = 1 + random.nextInt(GameHeight - 2);
-
-            coordinate = new Coordinate(x, y);
-            boolean collision = false;
-            for(Coordinate s: snake){
-                if(s.equals(coordinate)){
-                    collision = true;
-                    break;
-                }
-            }
-            if(collision) {
-                continue;
-            }
-
-            for (Coordinate a: apples) {
-                if(apples.equals(coordinate)) {
-                    collision = true;
-                    break;
-                }
-            }
-
-            added = !collision;
-        }
-        apples.add(coordinate);
+        apples.add(checkCollision(added, coordinate));
     }
+
 
     private void AddPears() {
         Coordinate coordinate = null;
 
         boolean added = false;
+        checkCollision(added, coordinate);
 
-        while (!added) {
+        pears.add(checkCollision(added, coordinate));
+
+    }
+
+    private Coordinate checkCollision(Boolean added, Coordinate coordinate) {
+        while (!added) { //while true
             int x = 1 + random.nextInt(GameWidth - 2);
             int y = 1 + random.nextInt(GameHeight - 2);
 
@@ -267,21 +395,21 @@ public class GameEngine {
                     break;
                 }
             }
-            if(collision) {
-                continue;
-            }
 
-            for (Coordinate a: pears) {
-                if(pears.equals(coordinate)) {
+            for(Coordinate w: walls){
+                if(w.equals(coordinate)){
                     collision = true;
                     break;
                 }
             }
 
+            if(collision) {
+                continue;
+            }
+
             added = !collision;
         }
-        pears.add(coordinate);
-
+        return coordinate;
     }
 
     public GameState getCurrentGameState() {
