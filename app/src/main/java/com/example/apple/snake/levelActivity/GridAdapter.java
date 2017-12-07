@@ -20,11 +20,9 @@ public class GridAdapter extends BaseAdapter {
     private Context mContext;
 
     public Integer[] categoriesIds = { R.drawable.one, R.drawable.two, R.drawable.three, R.drawable.four,
-            R.drawable.five, R.drawable.six };
-    public String[] categories = {
-            "Level", "Level", "Level", "Level", "Level", "Level"
-
-    };
+            R.drawable.five, R.drawable.six, R.drawable.seven,  R.drawable.eight,
+            R.drawable.nine, R.drawable.ten};
+    public String categories = "Level";
     // Constructor
     public GridAdapter(Context c) {
         mContext = c;
@@ -32,12 +30,12 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return categories.length;
+        return categoriesIds.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return categories[position];
+        return categoriesIds[position];
     }
 
     @Override
@@ -75,7 +73,7 @@ public class GridAdapter extends BaseAdapter {
         // object item based on the position
 
         // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
-        viewHolder.textViewItem.setText(categories[position]);
+        viewHolder.textViewItem.setText("Level");
         viewHolder.textViewItem.setTag(position);
 
         viewHolder.imageViewItem.setImageResource(categoriesIds[position]);

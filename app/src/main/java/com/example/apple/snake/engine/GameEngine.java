@@ -1,6 +1,7 @@
 package com.example.apple.snake.engine;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.apple.snake.classes.Coordinate;
 import com.example.apple.snake.enums.Direction;
@@ -253,6 +254,40 @@ public class GameEngine {
                 break;
             case 4:
                 for (int x = 0; x < GameWidth; x++) {
+                    Level2(x);
+                    Level7(x);
+                }
+                break;
+            case 5:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level2(x);
+                    Level7(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY2(y);
+                }
+                break;
+            case 6:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level1(x);
+                    Level2(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY1(y);
+                    LevelByY4(y);
+                }
+                break;
+            case 7:
+                for (int x = 0; x < GameWidth; x++) {
+                    Level6(x);
+                    Level7(x);
+                }
+                for (int y = 0; y < GameHeight; y++){
+                    LevelByY2(y);
+                }
+                break;
+            case 8:
+                for (int x = 0; x < GameWidth; x++) {
                     Level3(x);
                     Level5(x);
                 }
@@ -260,7 +295,7 @@ public class GameEngine {
                     LevelByY2(y);
                 }
                 break;
-            case 5:
+            case 9:
                 for (int x = 0; x < GameWidth; x++) {
                     Level6(x);
                 }
@@ -303,6 +338,14 @@ public class GameEngine {
         }
     }
 
+    //Level 7
+    private void LevelByY4(Integer y) {
+        if(y > 8 && y < GameWidth-10) {
+            walls.add(new Coordinate(0, y));
+            walls.add(new Coordinate(Math.round(GameWidth / 2) - 1, y));
+        }
+    }
+
     //Level #1
     private void Level1(Integer x) {
 
@@ -317,7 +360,7 @@ public class GameEngine {
     //Level #2
     private void Level2(Integer x) {
 
-        if (x > 8 && x < GameWidth-9) {
+        if (x > 8 && x < GameWidth-10) {
             walls.add(new Coordinate(x, Math.round(GameWidth / 2) - 1));
         }
     }
@@ -364,10 +407,34 @@ public class GameEngine {
         }
     }
 
+
+    private  void Level7(Integer x) {
+        if(x > Math.round(GameWidth / 6) - 1 && x < (Math.round(GameWidth / 6) + 4)) {
+            walls.add(new Coordinate(x, Math.round(GameWidth / 6) - 1));
+            walls.add(new Coordinate(x, Math.round(GameWidth / 6)));
+            walls.add(new Coordinate(x, Math.round(GameWidth / 6) + 1));
+            walls.add(new Coordinate(x, Math.round(GameWidth / 6) + 2));
+            walls.add(new Coordinate(x, 5*Math.round(GameWidth / 6) + 1));
+            walls.add(new Coordinate(x, 5*Math.round(GameWidth / 6) + 2));
+            walls.add(new Coordinate(x, 5*Math.round(GameWidth / 6) + 3));
+            walls.add(new Coordinate(x, 5*Math.round(GameWidth / 6) + 4));
+        }
+        if(x > 5*Math.round(GameWidth / 6) - 1 && x < 5*Math.round(GameWidth / 6) + 4) {
+            walls.add(new Coordinate(x, Math.round(GameWidth / 6) - 1));
+            walls.add(new Coordinate(x, Math.round(GameWidth / 6)));
+            walls.add(new Coordinate(x, Math.round(GameWidth / 6) + 1));
+            walls.add(new Coordinate(x, Math.round(GameWidth / 6) + 2));
+            walls.add(new Coordinate(x, 5*Math.round(GameWidth / 6) + 1));
+            walls.add(new Coordinate(x, 5*Math.round(GameWidth / 6) + 2));
+            walls.add(new Coordinate(x, 5*Math.round(GameWidth / 6) + 3));
+            walls.add(new Coordinate(x, 5*Math.round(GameWidth / 6) + 4));
+        }
+    }
+
     private void AddApples() {
         Coordinate coordinate = null;
 
-        boolean added = false;
+        boolean added = true;
         apples.add(checkCollision(added, coordinate));
     }
 
@@ -375,7 +442,7 @@ public class GameEngine {
     private void AddPears() {
         Coordinate coordinate = null;
 
-        boolean added = false;
+        boolean added = true;
         checkCollision(added, coordinate);
 
         pears.add(checkCollision(added, coordinate));
@@ -383,7 +450,7 @@ public class GameEngine {
     }
 
     private Coordinate checkCollision(Boolean added, Coordinate coordinate) {
-        while (!added) { //while true
+        while (added) { //while true
             int x = 1 + random.nextInt(GameWidth - 2);
             int y = 1 + random.nextInt(GameHeight - 2);
 
@@ -395,6 +462,7 @@ public class GameEngine {
                     break;
                 }
             }
+            //Log.d("walls added", walls.toString());
 
             for(Coordinate w: walls){
                 if(w.equals(coordinate)){
@@ -407,7 +475,7 @@ public class GameEngine {
                 continue;
             }
 
-            added = !collision;
+            added = collision;
         }
         return coordinate;
     }
